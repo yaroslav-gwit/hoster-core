@@ -20,6 +20,7 @@ type RestApiConfig struct {
 		Password       string `json:"password"`        // password for the basic HTTP auth
 		HaUser         bool   `json:"ha_user"`         // HA User has access to a different set of routes than the regular REST API user, and vise versa. Has been implemented to limit per-user API exposure, aka normal user is not authorized to call HA related routes.
 		PrometheusUser bool   `json:"prometheus_user"` // Prometheus User has access to the Prometheus metrics endpoint
+		AdminUser      bool   `json:"admin_user"`      // Admin User has access to the Admin API routes
 	} `json:"http_auth"`
 }
 

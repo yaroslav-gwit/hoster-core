@@ -20,14 +20,7 @@ func CheckRestUser(r *http.Request) bool {
 	}
 	// Find the right user
 	for _, v := range conf.HTTPAuth {
-		if v.HaUser {
-			// userCheck = v.User
-			// passCheck = v.Password
-			// break
-			continue
-		} else if v.PrometheusUser {
-			continue
-		} else {
+		if v.AdminUser {
 			userCheck = v.User
 			passCheck = v.Password
 			break

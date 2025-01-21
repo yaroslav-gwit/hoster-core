@@ -1,6 +1,6 @@
 package main
 
-// list taken from here:
+// list taken from here (if you ever need to update it):
 // https://data.iana.org/TLD/tlds-alpha-by-domain.txt
 var publicDomainList = []string{
 	"AAA",

@@ -46,6 +46,8 @@ func main() {
 				vmInfoList = getVmsInfo()
 				jailInfoList = getJailsInfo()
 				loadUpstreamDnsServers()
+				loadStaticRecords()
+				setResolvConf()
 
 				hostConf, err = HosterHost.GetHostConfig()
 				if err != nil {
@@ -61,6 +63,7 @@ func main() {
 
 	loadUpstreamDnsServers()
 	loadStaticRecords()
+	setResolvConf()
 
 	vmInfoList = getVmsInfo()
 	jailInfoList = getJailsInfo()
