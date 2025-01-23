@@ -66,11 +66,19 @@ func InfoJsonApi(vmName string) (r VmApi, e error) {
 		}
 
 		for ii, vv := range conf.Disks {
-			diskInfo, err := DiskInfo(v.Mountpoint + "/" + v.VmName + "/" + vv.DiskImage)
-			if err != nil {
-				continue
+			if vv.DiskLocation == "internal" {
+				diskInfo, err := DiskInfo(v.Mountpoint + "/" + v.VmName + "/" + vv.DiskImage)
+				if err != nil {
+					continue
+				}
+				r.Disks[ii].DiskSize = diskInfo
+			} else if vv.DiskLocation == "external" {
+				diskInfo, err := DiskInfo(vv.DiskImage)
+				if err != nil {
+					continue
+				}
+				r.Disks[ii].DiskSize = diskInfo
 			}
-			r.Disks[ii].DiskSize = diskInfo
 		}
 
 		return
