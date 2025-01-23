@@ -11,6 +11,7 @@ import (
 	"fmt"
 	"regexp"
 	"slices"
+	"strings"
 )
 
 func InfoJsonApi(vmName string) (r VmApi, e error) {
@@ -66,13 +67,13 @@ func InfoJsonApi(vmName string) (r VmApi, e error) {
 		}
 
 		for ii, vv := range conf.Disks {
-			if vv.DiskLocation == "internal" {
+			if vv.DiskLocation == "internal" && !strings.HasPrefix(vv.DiskImage, "/") {
 				diskInfo, err := DiskInfo(v.Mountpoint + "/" + v.VmName + "/" + vv.DiskImage)
 				if err != nil {
 					continue
 				}
 				r.Disks[ii].DiskSize = diskInfo
-			} else if vv.DiskLocation == "external" {
+			} else if vv.DiskLocation == "external" || strings.HasPrefix(vv.DiskImage, "/") {
 				diskInfo, err := DiskInfo(vv.DiskImage)
 				if err != nil {
 					continue
