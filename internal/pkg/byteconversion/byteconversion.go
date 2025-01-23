@@ -82,6 +82,7 @@ func HumanToBytes(sizeString string) (r uint64, e error) {
 	}
 
 	// Parse Uint64 from float64
+	sizeFloat = sizeFloat * float64(multiplier)
 	sizeFloat = math.Round(sizeFloat)
 	size := uint64(sizeFloat)
 
@@ -91,6 +92,7 @@ func HumanToBytes(sizeString string) (r uint64, e error) {
 	// 	return
 	// }
 
-	r = size * multiplier
+	// r = size * multiplier
+	r = size
 	return
 }
