@@ -35,7 +35,7 @@ func DiskInfo(filePath string) (r DiskSize, e error) {
 	// }
 	// r.TotalHuman = byteconversion.BytesToHuman(r.TotalBytes)
 
-	r.TotalBytes, err = byteconversion.HumanToBytes(split[4])
+	r.TotalBytes, err = byteconversion.HumanToBytes(strings.TrimSpace(split[4]))
 	if err != nil {
 		e = err
 		return
@@ -62,7 +62,7 @@ func DiskInfo(filePath string) (r DiskSize, e error) {
 	// 	return
 	// }
 	// r.UsedBytes = r.UsedBytes * 1024
-	r.UsedBytes, err = byteconversion.HumanToBytes(split[0])
+	r.UsedBytes, err = byteconversion.HumanToBytes(strings.TrimSpace(split[0]))
 	if err != nil {
 		e = err
 		return
