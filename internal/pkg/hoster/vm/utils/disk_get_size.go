@@ -19,6 +19,7 @@ func DiskInfo(filePath string) (r DiskSize, e error) {
 	out, err := exec.Command("ls", "-lh", filePath).CombinedOutput()
 	if err != nil {
 		e = fmt.Errorf("%s; %s", strings.TrimSpace(string(out)), err.Error())
+		fmt.Println("Error TOTAL_DISK_SPACE: ", e)
 		return
 	}
 	// Example output
@@ -37,6 +38,7 @@ func DiskInfo(filePath string) (r DiskSize, e error) {
 
 	r.TotalBytes, err = byteconversion.HumanToBytes(strings.TrimSpace(split[4]))
 	if err != nil {
+		fmt.Println("Error TOTAL_BYTES: ", err)
 		e = err
 		return
 	}
@@ -50,6 +52,7 @@ func DiskInfo(filePath string) (r DiskSize, e error) {
 	// 599M   /tank/virtio-drivers.iso
 	if err != nil {
 		e = fmt.Errorf("%s; %s", strings.TrimSpace(string(out)), err.Error())
+		fmt.Println("Error FREE_DISK_SPACE: ", e)
 		return
 	}
 
@@ -65,6 +68,7 @@ func DiskInfo(filePath string) (r DiskSize, e error) {
 	r.UsedBytes, err = byteconversion.HumanToBytes(strings.TrimSpace(split[0]))
 	if err != nil {
 		e = err
+		fmt.Println("Error USED_BYTES: ", e)
 		return
 	}
 
