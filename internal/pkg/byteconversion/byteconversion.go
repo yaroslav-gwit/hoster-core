@@ -6,6 +6,7 @@ package byteconversion
 
 import (
 	"fmt"
+	"math"
 	"strconv"
 	"strings"
 )
@@ -74,11 +75,21 @@ func HumanToBytes(sizeString string) (r uint64, e error) {
 		sizeString = strings.TrimSuffix(sizeString, "K")
 	}
 
-	size, err := strconv.ParseUint(sizeString, 10, 64)
+	sizeFloat, err := strconv.ParseFloat(sizeString, 64)
 	if err != nil {
-		e = fmt.Errorf("invalid size format")
+		e = fmt.Errorf("invalid size format: %s", err.Error())
 		return
 	}
+
+	// Parse Uint64 from float64
+	sizeFloat = math.Round(sizeFloat)
+	size := uint64(sizeFloat)
+
+	// size, err := strconv.ParseUint(sizeString, 10, 64)
+	// if err != nil {
+	// 	e = fmt.Errorf("invalid size format: %s", err.Error())
+	// 	return
+	// }
 
 	r = size * multiplier
 	return
