@@ -2122,6 +2122,40 @@ const docTemplate = `{
                 }
             }
         },
+        "/scheduler/jobs": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Get the list of scheduled, active and past jobs.\u003cbr\u003e` + "`" + `AUTH` + "`" + `: Only REST user is allowed.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Scheduler"
+                ],
+                "summary": "Get the list of scheduled, active and past jobs.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/SchedulerUtils.Job"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.SwaggerError"
+                        }
+                    }
+                }
+            }
+        },
         "/snapshot/all/{res_name}": {
             "get": {
                 "security": [
@@ -4760,12 +4794,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "disk_image": {
+                    "description": "this is a disk image name (internal: disk0.img) or an absolute path to the disk image (external: /tank/windows.iso).",
                     "type": "string"
                 },
                 "disk_input_size": {
                     "type": "integer"
                 },
                 "disk_location": {
+                    "description": "this is a disk location, e.g. internal or external.",
                     "type": "string"
                 },
                 "disk_type": {
@@ -4942,6 +4978,10 @@ const docTemplate = `{
                     "items": {
                         "type": "object",
                         "properties": {
+                            "admin_user": {
+                                "description": "Admin User has access to the Admin API routes",
+                                "type": "boolean"
+                            },
                             "ha_user": {
                                 "description": "HA User has access to a different set of routes than the regular REST API user, and vise versa. Has been implemented to limit per-user API exposure, aka normal user is not authorized to call HA related routes.",
                                 "type": "boolean"
@@ -4971,6 +5011,124 @@ const docTemplate = `{
                 },
                 "protocol": {
                     "description": "http or https -\u003e not implemented yet, will require another parameter: key_location",
+                    "type": "string"
+                }
+            }
+        },
+        "SchedulerUtils.Job": {
+            "type": "object",
+            "properties": {
+                "job_done": {
+                    "type": "boolean"
+                },
+                "job_done_logged": {
+                    "type": "boolean"
+                },
+                "job_error": {
+                    "type": "string"
+                },
+                "job_failed": {
+                    "type": "boolean"
+                },
+                "job_failed_logged": {
+                    "type": "boolean"
+                },
+                "job_id": {
+                    "type": "string"
+                },
+                "job_in_progress": {
+                    "type": "boolean"
+                },
+                "job_next": {
+                    "type": "boolean"
+                },
+                "job_type": {
+                    "type": "string"
+                },
+                "replication": {
+                    "$ref": "#/definitions/SchedulerUtils.ReplicationJob"
+                },
+                "res_type": {
+                    "type": "string"
+                },
+                "snapshot": {
+                    "$ref": "#/definitions/SchedulerUtils.SnapshotJob"
+                },
+                "time_added": {
+                    "type": "integer"
+                },
+                "time_finished": {
+                    "type": "integer"
+                }
+            }
+        },
+        "SchedulerUtils.ReplicationJob": {
+            "type": "object",
+            "properties": {
+                "done_snaps": {
+                    "type": "integer"
+                },
+                "progress_bytes_done": {
+                    "type": "integer"
+                },
+                "progress_bytes_total": {
+                    "type": "integer"
+                },
+                "res_name": {
+                    "type": "string"
+                },
+                "scripts_remove": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "scripts_replicate": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "speed_limit": {
+                    "type": "integer"
+                },
+                "ssh_endpoint": {
+                    "type": "string"
+                },
+                "ssh_key": {
+                    "type": "string"
+                },
+                "ssh_port": {
+                    "type": "integer"
+                },
+                "total_snaps": {
+                    "type": "integer"
+                },
+                "zfs_dataset": {
+                    "type": "string"
+                }
+            }
+        },
+        "SchedulerUtils.SnapshotJob": {
+            "type": "object",
+            "properties": {
+                "res_name": {
+                    "type": "string"
+                },
+                "snapshot_name": {
+                    "description": "only used in the snapshot destroy jobs",
+                    "type": "string"
+                },
+                "snapshot_type": {
+                    "type": "string"
+                },
+                "snapshots_to_keep": {
+                    "type": "integer"
+                },
+                "take_immediately": {
+                    "type": "boolean"
+                },
+                "zfs_dataset": {
                     "type": "string"
                 }
             }

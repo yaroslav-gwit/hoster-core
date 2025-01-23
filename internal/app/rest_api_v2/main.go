@@ -148,6 +148,8 @@ func main() {
 	r.HandleFunc("/api/v2/prometheus/autodiscovery/vms/use-ips", handlers.PrometheusAutoDiscoveryVmsIps).Methods(http.MethodGet)
 	// WireGuard
 	r.HandleFunc("/api/v2/wireguard/script", handlers.WireGuardScript).Methods(http.MethodPost)
+	// Scheduler
+	r.HandleFunc("/api/v2/scheduler/jobs", handlers.SchedulerGetJobs).Methods(http.MethodGet)
 
 	// HA
 	r.HandleFunc("/api/v2/carp-ha/ping", handlers.CarpPing).Methods(http.MethodPost)
