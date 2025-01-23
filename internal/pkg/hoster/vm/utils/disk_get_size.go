@@ -68,7 +68,7 @@ func DiskInfo(filePath string) (r DiskSize, e error) {
 	r.UsedBytes, err = byteconversion.HumanToBytes(strings.TrimSpace(split[0]))
 	if err != nil {
 		e = err
-		fmt.Println("Error USED_BYTES: ", e)
+		fmt.Printf("Error USED_BYTES: %v, %s; %s\n", e, split[0], filePath)
 		return
 	}
 
