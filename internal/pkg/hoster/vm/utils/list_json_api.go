@@ -10,6 +10,7 @@ import (
 	timeconversion "HosterCore/internal/pkg/time_conversion"
 	"regexp"
 	"slices"
+	"strings"
 )
 
 type DiskSize struct {
@@ -90,12 +91,27 @@ func ListJsonApi() (r []VmApi, e error) {
 			temp.Backup = true
 		}
 
+		// for ii, vv := range conf.Disks {
+		// 	diskInfo, err := DiskInfo(v.Mountpoint + "/" + v.VmName + "/" + vv.DiskImage)
+		// 	if err != nil {
+		// 		continue
+		// 	}
+		// 	temp.Disks[ii].DiskSize = diskInfo
+		// }
 		for ii, vv := range conf.Disks {
-			diskInfo, err := DiskInfo(v.Mountpoint + "/" + v.VmName + "/" + vv.DiskImage)
-			if err != nil {
-				continue
+			if vv.DiskLocation == "internal" && !strings.HasPrefix(vv.DiskImage, "/") {
+				diskInfo, err := DiskInfo(v.Mountpoint + "/" + v.VmName + "/" + vv.DiskImage)
+				if err != nil {
+					continue
+				}
+				temp.Disks[ii].DiskSize = diskInfo
+			} else if vv.DiskLocation == "external" || strings.HasPrefix(vv.DiskImage, "/") {
+				diskInfo, err := DiskInfo(vv.DiskImage)
+				if err != nil {
+					continue
+				}
+				temp.Disks[ii].DiskSize = diskInfo
 			}
-			temp.Disks[ii].DiskSize = diskInfo
 		}
 
 		r = append(r, temp)
