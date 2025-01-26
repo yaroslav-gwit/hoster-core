@@ -150,6 +150,7 @@ func main() {
 	r.HandleFunc("/api/v2/wireguard/script", handlers.WireGuardScript).Methods(http.MethodPost)
 	// Scheduler
 	r.HandleFunc("/api/v2/scheduler/jobs", handlers.SchedulerGetJobs).Methods(http.MethodGet)
+	r.HandleFunc("/api/v2/scheduler/cron", handlers.SchedulerGetCron).Methods(http.MethodGet)
 
 	// HA
 	r.HandleFunc("/api/v2/carp-ha/ping", handlers.CarpPing).Methods(http.MethodPost)
