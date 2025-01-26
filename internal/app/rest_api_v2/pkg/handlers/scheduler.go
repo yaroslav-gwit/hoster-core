@@ -45,11 +45,11 @@ func SchedulerGetJobs(w http.ResponseWriter, r *http.Request) {
 }
 
 type CronJob struct {
-	Enabled bool   `json:"enabled"`
-	Time    string `json:"time"`
-	User    string `json:"user"`
-	Command string `json:"command"`
-	Comment string `json:"comment"`
+	Disabled bool   `json:"disabled"`
+	Time     string `json:"time"`
+	User     string `json:"user"`
+	Command  string `json:"command"`
+	Comment  string `json:"comment"`
 }
 
 type CronFile struct {
@@ -140,13 +140,17 @@ func parseCronJob(filePath string) (r CronFile, e error) {
 
 		job := CronJob{}
 		if strings.HasPrefix(v, "#DISABLED") || strings.HasPrefix(v, "# DISABLED") {
-			job.Enabled = false
+			job.Disabled = true
 			v = strings.TrimPrefix(v, "#DISABLED")
 			v = strings.TrimPrefix(v, "# DISABLED")
 			v = strings.TrimSpace(v)
 		}
 
 		split := reSplitSpace.Split(v, -1)
+		if len(split) < 2 {
+			continue
+		}
+
 		if split[0] == "@hourly" || split[0] == "@daily" || split[0] == "@weekly" || split[0] == "@monthly" || split[0] == "@yearly" || split[0] == "@reboot" {
 			job.Time = split[0]
 			job.User = split[1]
@@ -163,9 +167,15 @@ func parseCronJob(filePath string) (r CronFile, e error) {
 				continue
 			}
 
+			job.Comment = reMatchJobComment.FindString(v)
+			job.Comment = strings.TrimSpace(job.Comment)
+
 			job.Time = strings.Join(split[:5], " ")
 			job.User = split[5]
 			job.Command = strings.Join(split[6:], " ")
+
+			job.Command = reMatchJobComment.ReplaceAllString(job.Command, "")
+			job.Command = strings.TrimSpace(job.Command)
 		}
 
 		r.CronJobs = append(r.CronJobs, job)
