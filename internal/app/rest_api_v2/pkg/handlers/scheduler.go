@@ -156,6 +156,7 @@ func parseCronJob(filePath string) (r CronFile, e error) {
 			job.User = split[1]
 
 			job.Comment = reMatchJobComment.FindString(v)
+			job.Comment = strings.TrimPrefix(job.Comment, "#")
 			job.Comment = strings.TrimSpace(job.Comment)
 
 			job.Command = strings.Join(split[2:], " ")
@@ -168,6 +169,7 @@ func parseCronJob(filePath string) (r CronFile, e error) {
 			}
 
 			job.Comment = reMatchJobComment.FindString(v)
+			job.Comment = strings.TrimPrefix(job.Comment, "#")
 			job.Comment = strings.TrimSpace(job.Comment)
 
 			job.Time = strings.Join(split[:5], " ")
