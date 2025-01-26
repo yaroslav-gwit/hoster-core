@@ -900,6 +900,32 @@ definitions:
       zfs_dataset:
         type: string
     type: object
+  handlers.CronFile:
+    properties:
+      cron_jobs:
+        items:
+          $ref: '#/definitions/handlers.CronJob'
+        type: array
+      cron_variables:
+        items:
+          type: string
+        type: array
+      file_name:
+        type: string
+    type: object
+  handlers.CronJob:
+    properties:
+      command:
+        type: string
+      comment:
+        type: string
+      enabled:
+        type: boolean
+      time:
+        type: string
+      user:
+        type: string
+    type: object
   handlers.DatasetEncryptionInput:
     properties:
       dataset:
@@ -2516,6 +2542,28 @@ paths:
       summary: Generate a Prometheus autodiscovery JSON output for all Hoster VMs.
       tags:
       - Prometheus
+  /scheduler/cron:
+    get:
+      description: 'Get the list of scheduled cron jobs.<br>`AUTH`: Only REST user
+        is allowed.'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/handlers.CronFile'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handlers.SwaggerError'
+      security:
+      - BasicAuth: []
+      summary: Get the list of scheduled cron jobs.
+      tags:
+      - Scheduler
   /scheduler/jobs:
     get:
       description: 'Get the list of scheduled, active and past jobs.<br>`AUTH`: Only

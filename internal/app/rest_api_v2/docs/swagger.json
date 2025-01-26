@@ -2115,6 +2115,40 @@
                 }
             }
         },
+        "/scheduler/cron": {
+            "get": {
+                "security": [
+                    {
+                        "BasicAuth": []
+                    }
+                ],
+                "description": "Get the list of scheduled cron jobs.\u003cbr\u003e`AUTH`: Only REST user is allowed.",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Scheduler"
+                ],
+                "summary": "Get the list of scheduled cron jobs.",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/handlers.CronFile"
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handlers.SwaggerError"
+                        }
+                    }
+                }
+            }
+        },
         "/scheduler/jobs": {
             "get": {
                 "security": [
@@ -5122,6 +5156,46 @@
                     "type": "boolean"
                 },
                 "zfs_dataset": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.CronFile": {
+            "type": "object",
+            "properties": {
+                "cron_jobs": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/handlers.CronJob"
+                    }
+                },
+                "cron_variables": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "file_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "handlers.CronJob": {
+            "type": "object",
+            "properties": {
+                "command": {
+                    "type": "string"
+                },
+                "comment": {
+                    "type": "string"
+                },
+                "enabled": {
+                    "type": "boolean"
+                },
+                "time": {
+                    "type": "string"
+                },
+                "user": {
                     "type": "string"
                 }
             }
