@@ -77,7 +77,7 @@ func SchedulerGetCron(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		errVal := fmt.Sprintf("%s; %s", strings.TrimSpace(string(out)), err.Error())
 		ReportError(w, http.StatusInternalServerError, errVal)
-		// return
+		return
 	}
 
 	files := strings.Split(strings.TrimSpace(string(out)), "\n")
@@ -89,7 +89,9 @@ func SchedulerGetCron(w http.ResponseWriter, r *http.Request) {
 			cronFile, err := parseCronJob(path)
 			if err != nil {
 				errVal := fmt.Sprintf("%s; %s", strings.TrimSpace(string(out)), err.Error())
-				log.Debugf("could not parse %s: %s", path, errVal)
+				// log.Debugf("could not parse %s: %s", path, errVal)
+				fmt.Printf("could not parse %s: %s\n", path, errVal)
+				continue
 			}
 
 			cronFiles = append(cronFiles, cronFile)
@@ -99,7 +101,7 @@ func SchedulerGetCron(w http.ResponseWriter, r *http.Request) {
 	payload, err := json.Marshal(cronFiles)
 	if err != nil {
 		ReportError(w, http.StatusInternalServerError, err.Error())
-		// return
+		return
 	}
 	w.Header().Add("Content-Type", "application/json")
 
