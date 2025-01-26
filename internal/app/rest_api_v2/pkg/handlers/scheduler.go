@@ -88,9 +88,7 @@ func SchedulerGetCron(w http.ResponseWriter, r *http.Request) {
 			path := "/etc/cron.d/" + v
 			cronFile, err := parseCronJob(path)
 			if err != nil {
-				errVal := fmt.Sprintf("%s; %s", strings.TrimSpace(string(out)), err.Error())
-				// log.Debugf("could not parse %s: %s", path, errVal)
-				fmt.Printf("could not parse %s: %s\n", path, errVal)
+				log.Debugf("could not parse %s: %s", path, err.Error())
 				continue
 			}
 
@@ -160,6 +158,11 @@ func parseCronJob(filePath string) (r CronFile, e error) {
 			job.Command = reMatchJobComment.ReplaceAllString(job.Command, "")
 			job.Command = strings.TrimSpace(job.Command)
 		} else {
+			if len(split) < 6 {
+				log.Debugf("could not parse CronJob (less than 5 split values): %s", v)
+				continue
+			}
+
 			job.Time = strings.Join(split[:5], " ")
 			job.User = split[5]
 			job.Command = strings.Join(split[6:], " ")
